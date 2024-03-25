@@ -1,0 +1,15 @@
+module Route ( Route, newR, inOrderR )
+
+ where
+
+import Data.List (elemIndex)
+data Route = Rou [String] deriving (Eq, Show)
+
+newR :: [String] -> Route
+newR ciudades = Rou ciudades 
+
+inOrderR :: Route -> String -> String -> Bool
+inOrderR (Rou ciudades) ciudad1 ciudad2 = 
+    case (elemIndex ciudad1 ciudades, elemIndex ciudad2 ciudades) of
+        (Just index1, Just index2) -> index1 < index2
+        _                          -> False
