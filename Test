@@ -1,0 +1,92 @@
+import Container 
+import Stack
+import Vessel
+import Route
+
+
+import Control.Exception
+import System.IO.Unsafe
+
+testF :: Show a => a -> Bool
+testF action = unsafePerformIO $ do
+    result <- tryJust isException (evaluate action)
+    return $ case result of
+        Left _ -> True
+        Right _ -> False
+    where
+        isException :: SomeException -> Maybe ()
+        isException _ = Just ()
+
+--Ciudades
+mdq = "MDQ"
+rsl = "RSL"
+bhi = "BHI"
+bue = "BUE"
+qeq = "QEQ"
+mvd = "MVD"
+ruta = newR [ bhi, qeq, mdq, bue, rsl ]
+
+--Contenedores
+contenedor1 = newC mdq 20
+contenedor2 = newC qeq 3
+contenedor3 = newC bhi 12
+contenedor4 = newC bue 9
+contenedor5 = newC rsl 15
+contenedor6 = newC rsl 1
+
+--Bahias
+bahia = newS 1                                      
+bahiaQEQ = stackS bahia contenedor2             
+bahia2 = newS 2                                      
+bahiaBUE = stackS bahia2 contenedor4           
+bahiaBueQeq = stackS bahia2 contenedor2           
+bahiaCompleta = stackS bahiaBueQeq contenedor4           
+unloadBue = popS bahiaCompleta bue                        
+
+--Barcos
+barco1 = newV 1 1 ruta                        
+barcoCont4 = loadV barco1 contenedor4    
+barcoalt2 = newV 2 1 ruta                         
+barco1free = loadV barcoalt2  contenedor2               
+barcoCompleto = loadV barco1free contenedor4    
+barcoSinBue = unloadV barcoCompleto bue                
+barco3 = newV 3 1 ruta                            
+barcoRSL = loadV barco3 contenedor6            
+vessel = loadV barcoRSL contenedor4            
+nuevoBarco2 = loadV nuevoBarco contenedor5             
+
+tCont = and[
+ destinationC contenedor1 == "MDQ",
+ netC contenedor2 == 3,
+ not (netC contenedor3 == 8),
+ not (testF (newC bue (-5))),
+ not (testF (newC bue 0)),
+ True]
+
+tRoute = and [
+    not (testF (newR [ bhi, qeq, mdq, bue, rsl ])),
+    inOrderR ruta  mdq bue,    
+    inOrderR ruta  bue rsl,                          
+    not (inOrderR ruta rsl mdq),                          
+    testF(inOrderR ruta bue "Buenos aires"),   
+    True]
+
+tStack = and[ 
+    not(testF(stackS bahia contenedor2)),             
+    not(holdsS bahiaQEQ contenedor3 ruta),    
+    not(holdsS bahiaBUE contenedor5 ruta),      
+    not(holdsS bahiaBueQeq contenedor3 ruta), 
+    netS bahiaQEQ == 3,                            
+    popS bahiaCompleta rsl == bahiaCompleta,                 
+    True]   
+
+tVessel = and [
+    not (testF (newV 1 1 ruta)),                         
+    testF (newV 0 1 ruta),                                
+    testF (newV (-4) 1 ruta),                            
+    testF (netV(loadV barcoCont4 contenedor5)),       
+    netV vessel == 12,                                 
+    freeCellsV barcoRSL == 2,                         
+    freeCellsV barcoCont4 /= freeCellsV (unloadV barcoCont4 bue),  
+    barco1 == unloadV barco1 mdq,    
+    True]
