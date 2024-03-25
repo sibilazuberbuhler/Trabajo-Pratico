@@ -1,0 +1,16 @@
+module Container ( Container, newC, destinationC, netC )
+ where
+
+data Container = Con String Int deriving (Eq, Show)
+
+newC :: String -> Int -> Container   -- construye un Contenedor dada una ciudad de destino y un peso en toneladas
+newC ciudad peso = Con ciudad peso   
+
+--contenedor1 :: Container 
+--contenedor1 = newC "Buenos Aires" 10 
+
+destinationC :: Container -> String  -- responde la ciudad destino del contenedor
+destinationC (Con ciudad peso) = ciudad
+
+netC :: Container -> Int -- responde el peso en toneladas del contenedor
+netC (Con ciudad peso) = peso
