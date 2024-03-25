@@ -1,0 +1,34 @@
+module Stack ( Stack, newS, freeCellsS, stackS, netS, holdsS, popS )
+ where
+
+
+import Container
+import Route
+
+data Stack = Sta [ Container ] Int deriving (Eq, Show) 
+-- [Container] Lista de containers, Entero que representa la capacidad de la pila
+
+newS :: Int -> Stack                          -- construye una Pila con la capacidad indicada 
+newS capacidad = Sta [] capacidad 
+
+freeCellsS :: Stack -> Int                    -- responde la celdas disponibles en la pila
+freeCellsS (Sta containers capacidad) = capacidad - length containers
+
+stackS :: Stack -> Container -> Stack         -- apila el contenedor indicado en la pila
+stackS (Sta containers capacidad) container = Sta (container : containers) capacidad
+
+netS :: Stack -> Int                          -- responde el peso neto de los contenedores en la pila
+netS (Sta containers peso) = sum [netC c | c <- containers]
+
+holdsS :: Stack -> Container -> Route -> Bool -- indica si la pila puede aceptar el contenedor considerando las ciudades en la ruta
+holdsS (Sta containers capacidad) contenedor ruta =
+    (netS (Sta containers capacidad)<= 20 ) && netS (Sta containers capacidad) < capacidad && inOrderR ruta (ultimaCiudad containers) (destinationC contenedor)
+
+ultimaCiudad :: [Container] -> String
+ultimaCiudad [] = error "La lista de contenedores está vacía"
+ultimaCiudad contenedores = destinationC (last contenedores)
+
+popS :: Stack -> String -> Stack              -- quita del tope los contenedores con destino en la ciudad indicada
+popS (Sta contenedores capacidad) ciudad
+    | ultimaCiudad contenedores == ciudad = popS (Sta (init contenedores) capacidad) ciudad
+    | otherwise = Sta contenedores capacidad
