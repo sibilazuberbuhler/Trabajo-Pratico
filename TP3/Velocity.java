@@ -1,22 +1,3 @@
-//package Drone;
-//
-//public class Velocity {
-//    public static final Velocity MIN = new Velocity("MIN");
-//    public static final Velocity LOW = new Velocity("LOW");
-//    public static final Velocity MEDIUM = new Velocity("MEDIUM");
-//    public static final Velocity HIGH = new Velocity("HIGH");
-//    public static final Velocity MAX = new Velocity("MAX");
-//
-//    private final String name;
-//
-//    private Velocity(String name) {
-//        this.name = name;
-//    }
-//
-//    public String getName() {
-//        return this.name;
-//    }
-//}
 package drone;
 
 public class Velocity {
