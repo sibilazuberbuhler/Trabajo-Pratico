@@ -22,28 +22,3 @@ public class CommandParser {
         return commands;
     }
 }
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//public class CommandParser {
-//    static public List<Command> parse(String s) {
-//        List<Command> commands = new ArrayList<>();
-//        for (int i = 0; i < s.length(); i++) {
-//            char letra = s.charAt(i);
-//            if (letra == 'i') {
-//                commands.add(new IncrementVelocity());
-//            } else if (letra == 's') {
-//                commands.add(new DecrementVelocity());
-//            } else if (letra == 'l') {
-//                commands.add(new Left());
-//            } else if (letra == 'r') {
-//                commands.add(new Right());
-//            } else if (letra == 'd') {
-//                commands.add(new DeploySonda());
-//            } else if (letra == 'f') {
-//                commands.add(new RecuperarSonda());
-//            }
-//        }
-//        return commands;
-//    }
-//}
